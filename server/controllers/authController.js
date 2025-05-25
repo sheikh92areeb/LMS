@@ -113,7 +113,17 @@ export const loginUser = async (req, res) => {
 };
 
 export const logoutUser = async (req, res) => {
+
     try {
+        const userId = req.user.id;
+
+        if (userId) {
+            await Users.updateOne(
+                { _id: userId },
+                { $set: { isLoggedIn: false } }
+            );
+        };
+
         res.clearCookie('token', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
